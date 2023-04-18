@@ -66,7 +66,7 @@ namespace MultiThreading.Task2.Chaining
 
         static int[] MultiplyArray(int[] arr) 
         {
-            var randomInteger = Random.Next(1, 10);
+            var randomInteger = Random.Next(1, 5);
 
             for (int i = 0; i < arr.Length; i++)
             {

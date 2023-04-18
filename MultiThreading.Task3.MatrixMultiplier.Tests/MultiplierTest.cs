@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiThreading.Task3.MatrixMultiplier.Matrices;
 using MultiThreading.Task3.MatrixMultiplier.Multipliers;
@@ -15,12 +16,40 @@ namespace MultiThreading.Task3.MatrixMultiplier.Tests
             TestMatrix3On3(new MatricesMultiplierParallel());
         }
 
+        [DataRow(100, 100)]
+        [DataRow(300, 150)]
+        [DataRow(500, 200)]
         [TestMethod]
-        public void ParallelEfficiencyTest()
+        public void ParallelEfficiencyTest(int rows, int cols)
         {
-            // todo: implement a test method to check the size of the matrix which makes parallel multiplication more effective than
-            // todo: the regular one
+            Stopwatch stopwatch = new Stopwatch();
+
+            Console.WriteLine("Regular(ms)\tParallel(ms)");
+
+
+            IMatrix matrix1 = new Matrix(rows, cols, true);
+            IMatrix matrix2 = new Matrix(rows, cols, true);
+
+
+            // Regular multiplication
+            stopwatch = Stopwatch.StartNew();
+            IMatrix resultRegular = new MatricesMultiplier().Multiply(matrix1, matrix2);
+            stopwatch.Stop();
+            var regularTime = stopwatch.ElapsedMilliseconds;
+
+            stopwatch.Reset();
+
+            // Parallel multiplication
+            stopwatch = Stopwatch.StartNew();
+            IMatrix resultParallel = new MatricesMultiplierParallel().Multiply(matrix1, matrix2);
+            stopwatch.Stop();
+            var parallelTime = stopwatch.ElapsedMilliseconds;
+
+            Console.WriteLine($"\t{regularTime}\t\t\t{parallelTime}");
+
+            Assert.IsTrue(parallelTime < regularTime);
         }
+
 
         #region private methods
 
